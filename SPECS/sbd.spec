@@ -15,7 +15,7 @@
 
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
-%global longcommit 6bb085f5704dd4c3841c79504f2aed2228e6d76a
+%global longcommit cf5c2208bad2db2dff9b09624b89b05415c3bc11
 %global shortcommit %(echo %{longcommit}|cut -c1-8)
 %global modified %(echo %{longcommit}-|cut -f2 -d-)
 %global github_owner Clusterlabs
@@ -47,14 +47,14 @@
 
 Name:           sbd
 Summary:        Storage-based death
-License:        GPLv2+
-Group:          System Environment/Daemons
-Version:        1.5.1
+License:        GPL-2.0-or-later
+Version:        1.5.2
 Release:        %{buildnum}%{?dist}
 Url:            https://github.com/%{github_owner}/%{name}
 Source0:        https://github.com/%{github_owner}/%{name}/archive/%{longcommit}/%{name}-%{longcommit}.tar.gz
-Patch0:         0001-Fix-Be-a-bit-more-descriptive-on-issues-opening-watc.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+Patch0:         0001-Fix-query-watchdog-avoid-issues-on-heap-allocation-f.patch
+Patch1:         0002-Refactor-sbd-md-alloc-de-alloc-reverse-order.patch
+Patch2:         0003-spec-convert-license-naming-to-SPDX.patch
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libuuid-devel
@@ -88,8 +88,7 @@ Available rpmbuild rebuild options:
 
 %package tests
 Summary:        Storage-based death environment for regression tests
-License:        GPLv2+
-Group:          System Environment/Daemons
+License:        GPL-2.0-or-later
 
 %description tests
 This package provides an environment + testscripts for
@@ -183,6 +182,20 @@ fi
 %{_libdir}/libsbdtestbed*
 
 %changelog
+* Wed May 24 2023 Klaus Wenninger <kwenning@redhat.com> - 1.5.2-2
+- add required tests subdirectory in addition to gating.yaml
+  that had already been brought over before
+
+  Related: rhbz#2168567
+
+* Wed May 24 2023 Klaus Wenninger <kwenning@redhat.com> - 1.5.2-1
+- rebase to upstream v1.5.2
+- convert license naming to SPDX
+- make static analysis happy with a few checks & rearanges with
+  dynamic-memory-management
+
+  Resolves: rhbz#2168567
+
 * Fri Jul 15 2022 Klaus Wenninger <kwenning@redhat.com> - 1.5.1-2
 - Be a bit more descriptive on issues opening watchdog-devices
 
